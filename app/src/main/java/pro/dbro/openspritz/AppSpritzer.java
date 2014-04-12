@@ -4,14 +4,22 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.UriPermission;
+import android.content.res.AssetManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.otto.Bus;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 
 import de.jetwick.snacktory.JResult;
@@ -22,6 +30,22 @@ import pro.dbro.openspritz.formats.HtmlPage;
 import pro.dbro.openspritz.formats.SpritzerMedia;
 import pro.dbro.openspritz.formats.UnsupportedFormatException;
 import pro.dbro.openspritz.lib.Spritzer;
+
+import static android.os.Environment.*;
+
+
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
+import java.util.Vector;
+
+
 
 /**
  * Parse a SpritzerMedia instance into a Queue of words
@@ -41,6 +65,7 @@ public class AppSpritzer extends Spritzer {
 
     private int mChapter;
     private SpritzerMedia mMedia;
+    private String brMedia;
     private Uri mMediaUri;
 
     public AppSpritzer(Bus bus, TextView target) {
@@ -53,22 +78,77 @@ public class AppSpritzer extends Spritzer {
         super(target);
         setEventBus(bus);
         openMedia(mediaUri);
-        mTarget.setText(mTarget.getContext().getString(R.string.touch_to_start));
+        mTarget.setText("Touc22hToS22tart");
     }
 
     public void setMediaUri(Uri uri) {
         pause();
         openMedia(uri);
-        mTarget.setText(mTarget.getContext().getString(R.string.touch_to_start));
+        //mTarget.setText("To11uch2St11art");
     }
 
     private void openMedia(Uri uri) {
-        if (isHttpUri(uri)) {
-            openHtmlPage(uri);
-        } else {
-            openEpub(uri);
-        }
+        //uri = ;
+        openTXTfile("/testread.txt");
+        //if (uri.toString().contains("testread.txt")) {
+        //    //openTXTfile(uri);
+        //} else if (isHttpUri(uri)) {
+        //    openHtmlPage(uri);
+        //} else {
+        //    openEpub(uri);
+        //}
     }
+
+    private void openTXTfile(String txtUri) {
+
+        String texto = "defolt";
+      //  try {
+
+            //File ruta_sd = getExternalStorageDirectory();
+            //Toast.makeText(mTarget.getContext(), ruta_sd.toString(), Toast.LENGTH_LONG).show();
+            //setText(ruta_sd.toString());
+            //File textFileRead = new File(ruta_sd.getAbsolutePath(), txtUri);
+           //mTarget.setText(textFileRead.toString());
+            //setText(textFileRead.toString());
+           // InputStream = new java.io.FileInputStream(getResources().openRawResource(R.raw.testread));
+         //   BufferedReader fin = new BufferedReader(
+         //           new InputStreamReader(
+        ///                    new java.io.FileInputStream();
+        //    mTarget.setText(fin.toString());
+       //     setText(fin.toString());
+        //    texto = fin.readLine();
+      //      fin.close();
+      //  } catch (IOException e) {
+     //       Toast.makeText(mTarget.getContext(), "bad text gg file gg", Toast.LENGTH_LONG).show();
+     //   }
+        brMedia = texto;//.toString();
+        mTarget.setText(brMedia);
+        setText(brMedia);
+    }
+
+//        if (txtUri.contains(".txt")) {
+//            File Txtpath = Environment.getExternalStorageDirectory();
+//            File Txtfile = new File(Txtpath,txtUri);
+//            StringBuilder text = new StringBuilder();
+//            try {
+//                BufferedReader br = new BufferedReader(new FileReader(Txtfile));
+//                String line;
+//
+//                while ((line = br.readLine()) != null) {
+//                    text.append(line);
+//                    text.append('\n');
+//                }
+//                brMedia = text.toString();
+//                //mTarget.setText(brMedia);
+//            }
+//            catch (IOException e) {
+//                brMedia = text.toString();
+//                Toast.makeText(mTarget.getContext(), "bad text file", Toast.LENGTH_LONG).show();
+//                //You'll need to add proper error handling here
+//
+//            }
+//        }
+
 
     private void openEpub(Uri epubUri) {
         try {
@@ -100,6 +180,7 @@ public class AppSpritzer extends Spritzer {
     }
 
     public SpritzerMedia getMedia() {
+
         return mMedia;
     }
 
@@ -186,20 +267,33 @@ public class AppSpritzer extends Spritzer {
         } else if (prefs.contains(PREF_TITLE) && mMedia.getTitle().compareTo(prefs.getString(PREF_TITLE, "")) == 0) {
             mChapter = prefs.getInt(PREF_CHAPTER, 0);
             if (VERBOSE) Log.i(TAG, "Resuming " + mMedia.getTitle() + " from chapter " + mChapter);
-            setText(loadCleanStringFromChapter(mChapter));
+
+            if (brMedia.length() > 0) {
+                setText(brMedia);
+            } else {
+                setText(loadCleanStringFromChapter(mChapter));
+            }
+            //setText(loadCleanStringFromChapter(mChapter));
             setWpm(prefs.getInt(PREF_WPM, 500));
             mCurWordIdx = prefs.getInt(PREF_WORD, 0);
         } else {
             mChapter = 0;
-            setText(loadCleanStringFromChapter(mChapter));
+
+            if (brMedia.length() > 0) {
+                setText(brMedia);
+            } else {
+                setText(loadCleanStringFromChapter(mChapter));
+            }
+            //setText(loadCleanStringFromChapter(mChapter));
         }
         if (!mPlaying) {
-            mTarget.setText(mTarget.getContext().getString(R.string.touch_to_start));
+            mTarget.setText("tuch2stert");
         }
     }
 
     private void reportFileUnsupported() {
-        Toast.makeText(mTarget.getContext(), mTarget.getContext().getString(R.string.unsupported_file), Toast.LENGTH_LONG).show();
+
+        Toast.makeText(mTarget.getContext(), "ggnotsupported file gg", Toast.LENGTH_LONG).show();
     }
 
     public static boolean isHttpUri(Uri uri) {
